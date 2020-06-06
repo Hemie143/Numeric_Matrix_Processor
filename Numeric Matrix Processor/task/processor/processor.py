@@ -15,13 +15,22 @@ def matrix_add(a, b):
         result.append([int(rowa[i]) + int(rowb[i]) for i in range(len(rowa))])
     return result
 
-a, ya, xa = input_matrix()
-b, yb, xb = input_matrix()
+def matrix_mul_c(a, const):
+    result = []
+    # for y in range(len(a)):
+    for row in a:
+        result.append([int(i) * int(const) for i in row])
+    return result
 
-if ya != yb or ya != yb:
-    print('ERROR')
-else:
-    c = matrix_add(a , b)
-    for row in c:
-        # print(row)
-        print(' '.join(str(x) for x in row))
+a, ya, xa = input_matrix()
+b = input()
+# b, yb, xb = input_matrix()
+
+# if ya != yb or ya != yb:
+#     print('ERROR')
+# else:
+#     c = matrix_add(a , b)
+c = matrix_mul_c(a, b)
+for row in c:
+    # print(row)
+    print(' '.join(str(x) for x in row))
