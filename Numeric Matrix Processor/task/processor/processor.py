@@ -30,7 +30,6 @@ def matrix_add(a, b):
 
 def matrix_mul_c(a, const):
     result = []
-    # for y in range(len(a)):
     for row in a:
         result.append([i * const for i in row])
     return result
@@ -46,6 +45,23 @@ def matrix_mul(a, b):
         result.append(row)
     return result
 
+def matrix_transpose(a, choice):
+    rows = len(a)
+    cols = len(a[0])
+    result = []
+    if choice == '1':   # Main diagonal
+        for i in range(cols):
+            result.append([a[j][i] for j in range(rows)])
+    elif choice == '2':   # Side diagonal
+        for i in range(cols-1, -1, -1):
+            result.append([a[j][i] for j in range(rows-1, -1, -1)])
+    elif choice == '3':   # vertical line
+        for j in range(rows):
+            result.append([a[j][i] for i in range(cols-1, -1, -1)])
+    elif choice == '4':  # horizontal line
+        for j in range(rows-1, -1, -1):
+            result.append([a[j][i] for i in range(cols)])
+    return result
 
 def matrix_print(m):
     for row in m:
