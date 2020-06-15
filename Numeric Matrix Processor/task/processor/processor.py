@@ -31,7 +31,17 @@ def matrix_add(a, b):
 def matrix_mul_c(a, const):
     result = []
     for row in a:
-        result.append([i * const for i in row])
+        result_row = []
+        for x in row:
+            y = x * const
+            if y != int(y):
+                int_check = False
+            result_row.append(int(y * 100) / 100)
+        result.append(result_row)
+    for i in range(len(a)):
+        for j in range(len(a[0])):
+            if a[i][j] % 1 == 0:
+                a[i][j] = int(a[i][j])
     return result
 
 def matrix_mul(a, b):
@@ -45,7 +55,7 @@ def matrix_mul(a, b):
         result.append(row)
     return result
 
-def matrix_transpose(a, choice):
+def matrix_transpose(a, choice='1'):
     rows = len(a)
     cols = len(a[0])
     result = []
@@ -63,6 +73,14 @@ def matrix_transpose(a, choice):
             result.append([a[j][i] for i in range(cols)])
     return result
 
+def matrix_cofactor(matrix, i, j):
+    mat_size = len(matrix)
+    minor = []
+    for r in range(mat_size):
+        if r != i:
+            minor.append([matrix[r][s] for s in range(mat_size) if s != j])
+    factor = 1 if (i + j) % 2 == 0 else -1
+    return factor * matrix_determinant(minor)
 
 def matrix_determinant(matrix):
     if len(matrix) == 1:
@@ -70,14 +88,20 @@ def matrix_determinant(matrix):
     if len(matrix) == 2:
         return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
     result = 0
-    mat_size = len(matrix)
+
     for j, element in enumerate(matrix[0]):
-        minor = []
-        for r in range(1, mat_size):
-            minor.append([matrix[r][s] for s in range(mat_size) if s != j])
-        factor = 1 if j % 2 == 0 else -1
-        result += element * factor * matrix_determinant(minor)
+        result += element * matrix_cofactor(matrix, 0, j)
     return result
+
+
+def matrix_inverse(matrix):
+    cofactors = []
+    mat_size = len(matrix)
+    for r in range(mat_size):
+        cofactors.append([matrix_cofactor(matrix, r, s) for s in range(mat_size)])
+    cofactors_trans = matrix_transpose(cofactors)
+    det_matrix = matrix_determinant(matrix)
+    return matrix_mul_c(cofactors_trans, 1 / det_matrix)
 
 
 def matrix_print(m):
@@ -91,8 +115,10 @@ while True:
     print('3. Multiply matrices')
     print('4. Transpose matrix')
     print('5. Calculate a determinant')
+    print('6. Inverse matrix')
     print('0. Exit')
     choice = input('Your choice:')
+    # choice = '6'
     if choice == '1':
         a, ya, xa = input_matrix('first')
         b, yb, xb = input_matrix('second')
@@ -121,5 +147,10 @@ while True:
         a, ya, xa = input_matrix()
         result = matrix_determinant(a)
         print(result)
+    elif choice == '6':
+        a, ya, xa = input_matrix()
+        # a = [[2, -1, 0], [0, 1, 2], [1, 1, 0]]
+        result = matrix_inverse(a)
+        matrix_print(result)
     elif choice == '0':
         exit()
