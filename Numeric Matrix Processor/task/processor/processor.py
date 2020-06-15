@@ -63,6 +63,23 @@ def matrix_transpose(a, choice):
             result.append([a[j][i] for i in range(cols)])
     return result
 
+
+def matrix_determinant(matrix):
+    if len(matrix) == 1:
+        return matrix[0][0]
+    if len(matrix) == 2:
+        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+    result = 0
+    mat_size = len(matrix)
+    for j, element in enumerate(matrix[0]):
+        minor = []
+        for r in range(1, mat_size):
+            minor.append([matrix[r][s] for s in range(mat_size) if s != j])
+        factor = 1 if j % 2 == 0 else -1
+        result += element * factor * matrix_determinant(minor)
+    return result
+
+
 def matrix_print(m):
     for row in m:
         print(' '.join(str(x) for x in row))
@@ -73,6 +90,7 @@ while True:
     print('2. Multiply matrix by a constant')
     print('3. Multiply matrices')
     print('4. Transpose matrix')
+    print('5. Calculate a determinant')
     print('0. Exit')
     choice = input('Your choice:')
     if choice == '1':
@@ -99,5 +117,9 @@ while True:
         a, ya, xa = input_matrix('')
         result = matrix_transpose(a, choice)
         matrix_print(result)
+    elif choice == '5':
+        a, ya, xa = input_matrix()
+        result = matrix_determinant(a)
+        print(result)
     elif choice == '0':
         exit()
